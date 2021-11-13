@@ -12,6 +12,9 @@ def check_resources(resources_needed):
     '''Checks available resources in the machine'''
 
     global resources
+
+    can_make = True
+
     for item_available, quantity_available in resources.items():
         for item_needed, quantity_needed in resources_needed.items():
             if item_available == item_needed:
@@ -19,8 +22,12 @@ def check_resources(resources_needed):
                     continue
                 else:
                     print(f"There is not enought {item_needed}.")
-                    return False
-    return True
+                    can_make = True
+
+    if can_make == False:
+        return False
+    else:
+        return True
 
 
 def process_coins(money_needed):
@@ -51,17 +58,22 @@ def make_coffe(choice, resources_needed):
     '''Makes the coffe'''
 
     global resources
-
+    can_make = True
     for item_available, quantity_available in resources.items():
         for item_needed, quantity_needed in resources_needed.items():
             if item_available == item_needed:
-                if quantity_available > quantity_needed:
+                if quantity_available >= quantity_needed:
                     resources[item_available] -= quantity_needed
                 else:
                     print(f"There is not enought {item_needed}.")
-                    return False
-    return True
-    print(f"Here's your {choice}, enjoy!")
+                    can_make = False
+
+    if can_make == False:
+        return False
+    else:
+        print(f"Here's your {choice}, enjoy!")
+        return True
+
 
 def refill():
     '''Refills resources in the machine.'''
