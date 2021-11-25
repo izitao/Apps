@@ -1,0 +1,103 @@
+#Program na sifrovani a desifrovani zpravy
+import random
+
+def vytvor_sifrovaci_slovnik(): #-> dict:
+    '''Sifrovaci algoritmus'''
+    #Vytvoreni sifrovaciho slovniku
+    abeceda = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    sifrovaci_slovnik = {}
+    vystupni_soubor = 'slovnik.txt'
+    sifrovaci_seznam = random.sample(abeceda, len(abeceda))
+
+    for i in range(len(abeceda)):
+        sifra = {str(abeceda[i]) : sifrovaci_seznam[i]}
+        sifrovaci_slovnik.update(sifra)
+    
+    #Ulozeni sifrovaciho slovniku do souboru
+    soubor = open(vystupni_soubor, 'w')
+    for pismeno, sifra in sifrovaci_slovnik.items():
+        soubor.write(pismeno + " : " + sifra + "\n")
+    soubor.close()
+
+    return sifrovaci_slovnik
+
+
+def obrat_pismena(vstupni_text, sifrovaci_slovnik):
+    '''obraci pismeno a jeho sifru a naopak na zaklade sifrovaciho slovniku'''
+    novy_text = []
+    for pismeno in range(len(vstupni_text)):
+        if vstupni_text[pismeno].lower() in sifrovaci_slovnik.keys():
+            novy_text.append(sifrovaci_slovnik[vstupni_text[pismeno]])
+        else:
+            novy_text.append(vstupni_text[pismeno])
+    return novy_text
+
+
+def nacti_sifrovaci_slovnik(sifrovaci_slovnik_soubor):
+    '''Nacte sifrovaci algoritmus ze souboru'''
+    sifrovaci_slovnik_soubor = open(sifrovaci_slovnik_soubor, 'r')
+
+    sifrovaci_slovnik = {}
+    for radek in sifrovaci_slovnik_soubor:
+        nacteny_sifrovaci_radek = []
+        for nactene_pismeno in radek.split(':'):
+             nacteny_sifrovaci_radek.append(nactene_pismeno.strip())
+        sifra = {nacteny_sifrovaci_radek[0] : nacteny_sifrovaci_radek[1]}
+        sifrovaci_slovnik.update(sifra)
+
+    sifrovaci_slovnik_soubor.close()
+    return sifrovaci_slovnik
+
+
+def zasifruj(text, vystpuni_soubor, sifrovaci_slovnik):
+    '''Zasifruje vstupni text'''
+    # 1)nacti sifrovaci slovnik
+    
+    vstupni_text = open(text, 'r')
+    text = vstupni_text.read()
+    novy_text = obrat_pismena(text, nacti_sifrovaci_slovnik(sifrovaci_slovnik))
+
+    # 2)obrat text podle sifrovaciho slovniku
+    soubor = open(vystpuni_soubor, 'w')
+    for pismeno in range(len(novy_text)):
+        soubor.write(novy_text[pismeno])
+    soubor.close()
+
+
+def desifruj(text, vystupni_soubor, sifrovaci_slovnik):
+    '''Desifruje vstupni text'''
+    #1 nacti slovnik + obrat slovnik
+    
+    zasifrovany_text = open(text, 'r')
+    text = zasifrovany_text.read()
+    novy_text = obrat_pismena(text, obrat_slovnik(nacti_sifrovaci_slovnik(sifrovaci_slovnik)))
+
+    #2 obrat text podle sifrovaciho slovniku
+    soubor = open(vystupni_soubor, 'w')
+    for pismeno in range(len(novy_text)):
+        soubor.write(novy_text[pismeno])
+    soubor.close()
+
+
+def obrat_slovnik(sifrovaci_slovnik):
+    '''Obracena logika'''
+    novy_slovnik = {}
+    for pismeno, sifra in sifrovaci_slovnik.items():
+        sifra = {sifra : pismeno}
+        novy_slovnik.update(sifra)
+    return novy_slovnik
+
+
+def main():
+    vytvor_sifrovaci_slovnik()
+    vstpni_text = 'vstup.txt'
+    sifrovaci_slovnik_soubor = 'slovnik.txt'
+    zasifrovany_soubor = 'sifra.txt'
+    desifrovany_soubor = 'desifra.txt'
+
+    zasifruj(vstpni_text, zasifrovany_soubor, sifrovaci_slovnik_soubor)
+    desifruj(zasifrovany_soubor, desifrovany_soubor, sifrovaci_slovnik_soubor)
+
+
+if __name__ == '__main__':
+    main()
