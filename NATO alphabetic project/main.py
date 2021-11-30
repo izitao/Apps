@@ -7,12 +7,22 @@ nato_phonetic_input = pandas.read_csv(file)
 nato_phonetic_dict = {str(row.letter):str(row.code) for (index, row) in nato_phonetic_input.iterrows()}
 print(nato_phonetic_dict)
 
+#classical way
 '''nato_phonetic_dict = {}
 for (index, row) in nato_phonetic_input.iterrows():
-    nato_phonetic_dict[row.letter]=row.code''' #classical way
+    nato_phonetic_dict[row.letter]=row.code'''
 
 #USING THE DICTIONARY TO SPELL EACH LETTER WITH IT'S CODE
 
-user_input = input('Write a word: ').upper()
-phonetic_output = {letter:nato_phonetic_dict[letter] for letter in user_input if letter in nato_phonetic_dict.keys()}
-print(phonetic_output)
+def generate_phonetic():
+
+    user_input = input('Write a word: ').upper()
+    try:
+        phonetic_output = {letter:nato_phonetic_dict[letter] for letter in user_input} # if letter in nato_phonetic_dict.keys()}
+    except KeyError:
+        print("Sorry, only alphabets are allowed as input.")
+        generate_phonetic()
+    else:
+        print(phonetic_output)
+
+generate_phonetic()
