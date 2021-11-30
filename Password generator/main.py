@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import random
 import pyperclip
+import json
 
 # ---------------------------- PASSWORD GENEATOR ------------------------------- #
 
@@ -32,6 +33,8 @@ def save():
 
     ''' Saves the inputs into a file '''
 
+    global DATA_FILE
+
     website = entry_website.get()
     email = entry_email.get()
     password = entry_password.get()
@@ -48,17 +51,61 @@ def save():
         add_info = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email}\n"
                                                       f"Password: {password}\nIs it ok to save?")
         if add_info == True:
-            filename = "data.txt"   #where the entries are saved
-            with open(filename, "a") as file:
-                file.write(f"{website}  |  {email}  |  {password}\n")
+            new_data = {
+                website: {
+                    "email": email,
+                    "password": password,
+                }
+            }
 
-            entry_website.delete(0, END)
-            entry_password.delete(0, END)
+
+            try:
+                with open(DATA_FILE, "r") as data_file:
+                    data = json.load(data_file) #Reading old data
+
+            except FileNotFoundError:
+                with open(DATA_FILE, "w") as data_file:
+                    json.dump(new_data, data_file)
+
+            else:
+                data.update(new_data) #Updating old data with new data
+                with open(DATA_FILE, "w") as data_file:
+                    json.dump(data, data_file, indent=4) # Saving updated data
+
+            finally:
+                entry_website.delete(0, END)
+                entry_password.delete(0, END)
+
+
+# ------------------------- FIND PASSWORDS ---------------------------- #
+
+def find_password():
+
+    '''Searches for the reqeusted password'''
+
+    global DATA_FILE
+
+    try:
+        with open(DATA_FILE, "r") as data_file:
+            data = json.load(data_file)
+
+    except FileNotFoundError:
+        messagebox.showerror(title="Error", message="No data file found.")
+
+    else:
+        website = entry_website.get()
+        
+        if website in data.keys():
+            messagebox.showinfo(title=f"{website}", message=f"E-mail/Username: {data[website]['email']}\n"
+                                                            f"Password: {data[website]['password']}")
+        else:
+            messagebox.showerror(title="Error", message="Website not found.")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
 
 WHITE = "#FFFFFF"
+DATA_FILE = "data.json"
 
 window = Tk()
 window.title("Password Manager")
@@ -74,8 +121,8 @@ label_website = Label(text="Website:", bg=WHITE)
 label_website.grid(row=1, column =0)
 
 #website entry
-entry_website = Entry(width=50)
-entry_website.grid(row=1, column=1, columnspan=2)
+entry_website = Entry(width=32)
+entry_website.grid(row=1, column=1)
 entry_website.focus()
 
 #email/user label
@@ -102,5 +149,9 @@ button_generate_pw.grid(row=3, column=2)
 #add button
 button_add = Button(text="Add", bg=WHITE, width=43, command=save)
 button_add.grid(row=4, column=1, columnspan=2)
+
+#search button
+button_search = Button(text="Search", bg=WHITE, width=14, command=find_password)
+button_search.grid(row=1, column=2)
 
 window.mainloop()
