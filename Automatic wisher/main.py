@@ -11,9 +11,7 @@ def letter_picker(name, sender, email_adress):
     letter_file = random.choice(letter_files)
 
     with open(letter_file) as lf:
-        wish = lf.readlines()
-
-    letter = "".join(str(letter_in_wish) for letter_in_wish in wish)
+        letter = lf.read()
 
     letter = letter.replace("[NAME]", str(name))
     letter = letter.replace("[SENDER]", str(sender))
