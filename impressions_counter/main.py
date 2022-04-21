@@ -48,7 +48,6 @@ def separate_tables(impressions_data_raw):
 def order_by_visitor_hash(impressions_data):
     """ Serazeni kazde tabulky podle visitorHash """
 
-    # seznam s id impresi k vymazani
 
     for table in impressions_data:
         visitor_hashes = []
@@ -118,4 +117,3 @@ delete_duplicate_visits(impressions_ids_to_delete)
 impressions_data_edit.to_csv(filepath_impressions_edited, index=False)
 clicks_data_edit.to_csv(filepath_clicks_edited, index=False)
 print(impressions_ids_to_delete)
-
