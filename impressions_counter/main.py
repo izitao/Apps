@@ -102,7 +102,6 @@ def delete_duplicate_visits(impression_ids):
     impression_ids.sort(reverse=True)
 
     for impression_id in impression_ids:
-        print(impression_ids)
         impressions_data_edit.drop(index=impression_id-1, axis=0, inplace=True)
         # ziskani indexu radku pro tabulku clicks ktery se vyhodnotli jako duplicitni v tabulce impressions
         click_index_delete = (clicks_data_edit[clicks_data_edit.impressionId == impression_id].index.values)
@@ -116,4 +115,4 @@ delete_duplicate_visits(impressions_ids_to_delete)
 
 impressions_data_edit.to_csv(filepath_impressions_edited, index=False)
 clicks_data_edit.to_csv(filepath_clicks_edited, index=False)
-print(impressions_ids_to_delete)
+
