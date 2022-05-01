@@ -91,7 +91,7 @@ def get_duplicate_impression_id(values_list, timestamp_dict):
             delta = delta.total_seconds()
             # hlavni podminky casoveho kriteria
             if delta <= min_delta:
-                print(timestamp_dict[value][0])
+                print(f"Duplicitni impressionId: {timestamp_dict[value][0]}")
                 impression_id_delete = timestamp_dict[value][0]
                 impressions_ids_to_delete.append(impression_id_delete)
 
