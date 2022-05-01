@@ -1,6 +1,7 @@
 import pandas
 from datetime import datetime
 
+
 #vstupni data
 filepath_clicks_raw = "raw_data/clicks.csv"
 filepath_impressions_raw = "raw_data/impressions.csv"
@@ -47,7 +48,6 @@ def separate_tables(impressions_data_raw):
 
 def order_by_visitor_hash(impressions_data):
     """ Serazeni kazde tabulky podle visitorHash """
-
 
     for table in impressions_data:
         visitor_hashes = []
