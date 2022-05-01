@@ -1,0 +1,35 @@
+--vytvoreni tabulek a vlozeni vstupnich dat
+CREATE TABLE Public."ImpressionsTable"(impressionTime date, impressionId int, adId int, visitorHash varchar(100))
+select * from Public."ImpressionsTable"
+delete from Public."ImpressionsTable"
+COPY Public."ImpressionsTable" FROM 'C:\kurzy\impressions\data\impressions_filter.csv' DELIMITER ',' CSV HEADER ;
+ALTER TABLE public."ImpressionsTable"
+    ALTER COLUMN impressionid SET NOT NULL;
+ALTER TABLE public."ImpressionsTable"
+    ADD PRIMARY KEY (impressionid);
+
+CREATE TABLE Public."ClicksTable"(clickTimestamp date, impressionId int)
+select * from Public."ClicksTable"
+COPY Public."ClicksTable" FROM 'C:\kurzy\impressions\data\clicks_filter.csv' DELIMITER ',' CSV HEADER ;
+
+ALTER TABLE public."ClicksTable"
+    ALTER COLUMN impressionid SET NOT NULL;
+ALTER TABLE public."ClicksTable"
+    ADD PRIMARY KEY (impressionid);
+
+
+-- dotazy
+
+SELECT COUNT(*)
+FROM Public."ImpressionsTable"
+WHERE "adid" = 1 AND "impressiontime" = '2021-04-20'
+
+select * from Public."ImpressionsTable"
+
+SELECT COUNT(*)
+FROM Public."ClicksTable"
+WHERE "clicktimestamp" = '2021-04-21'
+
+
+
+
